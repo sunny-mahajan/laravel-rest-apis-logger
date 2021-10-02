@@ -5,7 +5,7 @@
         }
     },
     "name": "tf/restlogger",
-    "description": "Small laravel package for viewing api logs which can be used in debugging.",
+    "description": "Small laravel package for viewing rest api logs for debugging.",
     "type": "library",
     "license": "MIT",
     "authors": [
