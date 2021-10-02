@@ -37,7 +37,8 @@
                         {{ csrf_field() }}
                         {{ method_field('DELETE') }}
                         <div class="form-group">
-                            <input type="submit" class="btn btn-danger delete-logs" value="Delete Logs">
+                            <input type="submit" {{ count($restlogs) == 0 ? 'disabled' : '' }} class="btn btn-danger delete-logs" value="Clear All Logs"
+                                onclick="return confirm('Are you sure you want to clear all the logs?')" />
                         </div>
                     </form>
                 </div>
