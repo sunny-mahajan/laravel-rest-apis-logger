@@ -47,11 +47,11 @@
                     <div class="list-group-item list-group-item-action" style="margin:5px">
                         <div class="row w-100 align-items-center">
                             <span class="col-md-3">
-                                @if ($log->response>400)
+                                @if ($log->res_status > 400)
                                 <button class="btn btn-danger font-weight-bold">{{$log->method}}</button>
-                                @elseif($log->response>300)
+                                @elseif($log->res_status > 300)
                                 <button class="btn btn-info font-weight-bold">{{$log->method}}</button>
-                                @elseif($log->response=200)
+                                @elseif($log->res_status = 200)
                                 <button class="btn btn-success font-weight-bold">{{$log->method}}</button>
                                 @else
                                 <button class="btn btn-primary font-weight-bold">{{$log->method}}</button>
