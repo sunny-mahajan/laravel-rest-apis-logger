@@ -1,0 +1,25 @@
+{
+    "autoload": {
+        "psr-4": {
+            "TF\\": "src/"
+        }
+    },
+    "name": "tf/restlogger",
+    "description": "Small laravel package for viewing api logs which can be used in debugging.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sunny Kumar",
+            "email": "sunny@techformation.co.in"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "TF\\Providers\\RestLogsServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev"
+}
