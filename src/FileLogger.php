@@ -37,7 +37,7 @@ class FileLogger extends AbstractLogger implements RestLoggerInterface
                     $lines = file($this->path . DIRECTORY_SEPARATOR . $file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
                     foreach ($lines as $line) {
-                        $contentarr = explode(";", $line);
+                        $contentarr = explode("~", $line);
 
                         array_push($contentCollection, $this->mapArrayToModel($contentarr));
                     }
@@ -63,7 +63,9 @@ class FileLogger extends AbstractLogger implements RestLoggerInterface
 
         $filename = $this->getLogFilename();
 
-        $contents = implode(";", $data);
+        $data['res_payload'] = json_encode(json_decode($data['res_payload']));
+
+        $contents = implode("~", $data);
 
         File::makeDirectory($this->path, 0777, true, true);
 

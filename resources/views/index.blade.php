@@ -80,7 +80,7 @@
                         </div>
 
                         <div class="row w-100 my-2 align-items-center">
-                            <span class="col-md-12"><b>Response :</b> {{$log->res_payload}}</span>
+                            <span class="col-md-12 text-break"><b>Response :</b> {{$log->res_payload}}</span>
                         </div>
                     </div>
                     @empty
