@@ -4,7 +4,7 @@
             "TF\\": "src/"
         }
     },
-    "name": "tf/restlogger",
+    "name": "tfspl/restlogger",
     "description": "Small laravel package for viewing rest api logs for debugging.",
     "type": "library",
     "license": "MIT",
