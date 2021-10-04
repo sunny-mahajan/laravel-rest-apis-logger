@@ -16,13 +16,13 @@ the ServiceProvider. If you use a lower version of Laravel you must register it 
 _app.php_ file:
 
 ```bash
-TF\Providers\ApiLogServiceProvider::class
+TF\Providers\RestLogsServiceProvider::class
 ```
 
 2. Publish the config file with:
 
 ```bash
-php artisan vendor:publish --tag=config --provider="TF\Providers\ApiLogServiceProvider"
+php artisan vendor:publish --tag=config --provider="TF\Providers\RestLogsServiceProvider"
 ```
 
 The config file is called *restlogs.php*. Currently supported drivers are *db* and *file*
