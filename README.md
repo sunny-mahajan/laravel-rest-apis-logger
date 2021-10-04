@@ -7,7 +7,7 @@ This is a small package that can helps in debugging with API logs.
 1. Install the package via composer
 
 ```bash
-composer require tf/restlogger @dev
+composer require tf/restlogger @v0.1-alpha
 ```
 ## Usage
 
