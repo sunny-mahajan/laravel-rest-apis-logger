@@ -11,11 +11,18 @@
     <title>{{ config('app.name', 'Rest Logger') }}</title>
 
     <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
 
     <!-- Styles -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+
+    <style>
+        .container{max-width: 90%;}
+    </style>
 </head>
 
 <body style="font-family: 'Roboto', sans-serif; font-size: 0.9rem;line-height: 1.6">
@@ -29,7 +36,7 @@
         </nav>
 
         <main class="py-4">
-            <div class="container">
+            <div class="container text-break">
                 <div class="w-100 d-flex justify-content-between">
                     <h3 class="text-center">Rest Logger</h3>
 
@@ -45,7 +52,7 @@
 
                 <div class="list-group">
                     @forelse ($restlogs as $key => $log)
-                    <div class="list-group-item list-group-item-action" style="margin:5px">
+                    <div class="list-group-item list-group-item-action my-2 border">
                         <div class="row w-100 align-items-center">
                             <span class="col-md-3">
                                 @if ($log->res_status > 400)
@@ -66,21 +73,28 @@
                             <large class="col-md-3 mb-1"><b>IP :</b> {{$log->ip}}</large>
                         </div>
 
-                        <hr>
+                        <hr class="my-3"/>
 
                         <div class="row w-100 my-2 align-items-center">
-                            <span class="col-md-3"><b>URL : </b>{{$log->url}}</span>
-                            <span class="col-md-9"><b>Models(Retrieved) :</b> {{$log->models}}</span>
+                            <span class="col-md-4"><b>URL : </b>{{$log->url}}</span>
+                            <span class="col-md-8"><b>Models(Retrieved) :</b> {{$log->models}}</span>
                         </div>
 
                         <div class="row w-100 my-2 align-items-center">
-                            <span class="col-md-3"><b>Controller :</b> {{$log->controller}}</span>
-                            <span class="col-md-3"><b>Action :</b> {{$log->action}}</span>
-                            <span class="col-md-6"><b>Payload : </b>{{$log->payload}}</span>
+                            <span class="col-md-6"><b>Controller :</b> {{$log->controller}}</span>
+                            <span class="col-md-6"><b>Action :</b> {{$log->action}}</span>
                         </div>
 
+                        <hr class="my-2"/>
+
                         <div class="row w-100 my-2 align-items-center">
-                            <span class="col-md-12 text-break"><b>Response :</b> {{$log->res_payload}}</span>
+                            <span class="col-md-12 text-break"><b>Request Payload:</b> {{$log->payload}}</span>
+                        </div>
+
+                        <hr class="my-2"/>
+
+                        <div class="row w-100 my-2 align-items-center">
+                            <span class="col-md-12 text-break"><b>Response Payload:</b> {{$log->res_payload}}</span>
                         </div>
                     </div>
                     @empty
