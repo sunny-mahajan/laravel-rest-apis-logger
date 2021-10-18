@@ -103,6 +103,44 @@
                     </div>
                     @endforelse
                 </div>
+                @if($lastPage > 1)
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        @if($currentPage > 1)
+                        <li class="page-item"><a class="page-link" href="?page=1"><<</a></li>
+                        @else
+                        <li class="page-item"><button type="button" class="page-link" href="?page=1" disabled><<</a></li>
+                        @endif
+                        @if($currentPage > 1)
+                        <li class="page-item"><a class="page-link" href="?page={{$currentPage-1}}"><</a></li>
+                        @else
+                        <li class="page-item"><button type="button" class="page-link" href="?page={{$currentPage-1}}" disabled><</a></li>
+                        @endif
+                        @if($currentPage < 3)
+                        @for( $i =1; $i <= 3; $i++)
+                        <li class="page-item"><a class="page-link" href="?page={{$i}}">{{ $i }}</a></li>
+                        @endfor
+                        @endif
+                        @if($currentPage >= 3)
+                        @for( $i = $currentPage-1; $i <= $currentPage+1 && $i <= $lastPage; $i++)
+                        <li class="page-item"><a class="page-link" href="?page={{ $i }}">{{ $i }}</a></li>
+                        @endfor
+                        @endif
+                        @if($currentPage < $lastPage-1)
+                        <li class="page-item"><a class="page-link" href="?page={{$currentPage+1}}">></a></li>
+                        @else
+                        <li class="page-item"><button type="button" class="page-link" href="?page={{$currentPage+1}}" disabled>></a></li>
+                        @endif
+                        @if($currentPage < $lastPage-1)
+                        <li class="page-item"><a class="page-link" href="?page={{$lastPage}}">>></a></li>
+                        @else
+                        <li class="page-item"><button type="button" class="page-link" href="?page={{$lastPage}}" disabled>>></a></li>
+                        @endif
+                    </ul>
+                    <large class="col-md-3"><b>Total Pages  : </b>{{ $lastPage }}</large>
+                    <large class="col-md-3"><b>Current Page  : </b>{{ $currentPage }}</large>
+                </nav>
+                @endif
             </div>
         </main>
     </div>
