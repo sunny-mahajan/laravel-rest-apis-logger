@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use TF\Contracts\RestLoggerInterface;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class RestLogsController extends Controller
@@ -15,24 +16,37 @@ class RestLogsController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index(RestLoggerInterface $logger)
+    public function index(RestLoggerInterface $logger, Request $request)
     {
+        $input = $request->all();
         $restlogs = $logger->getLogs();
-        $restlogs = $this->paginate($restlogs, 2, $_GET['page']??"");
-        $currentPage = $restlogs->currentPage();
-        $total = $restlogs->total();
-        $lastPage = $restlogs->lastPage();
-        $page = $_GET['page'] ?? 0 + 1;
-
-        if (count($restlogs) > 0) {
+        $perPage = $input['s'] ?? 20;
+        $offset = $perPage*($input['p']??'1');
+        
+        if(isset($input['m']))
+        {
+            $restlogs = $restlogs->filter(function ($value, $key) use($input){
+                return $value->method == $input['m'];
+            });
+        }
+        if(count($restlogs)> 0)
+        {
             $restlogs = $restlogs->sortByDesc('created_at');
-        } else {
+            $restlogs = $this->paginate($restlogs, $perPage, $_GET['p']??"");
+        }
+        else
+        {
             $restlogs = [];
         }
 
-        return view('restlog::index', compact('restlogs','currentPage','total','lastPage'));
+        return view('restlog::index', compact('restlogs','offset'));
     }
 
+    /**
+     * Pagination for restlogs.
+     *
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
     public function paginate($items, $perPage, $page = null, $options = [])
     {
         $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
