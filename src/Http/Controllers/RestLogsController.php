@@ -23,7 +23,7 @@ class RestLogsController extends Controller
         $perPage = $input['s'] ?? 20;
         $offset = $perPage*($input['p']??'1');
         
-        if(isset($input['m']))
+        if(isset($input['m']) && $restlogs != null)
         {
             $restlogs = $restlogs->filter(function ($value, $key) use($input){
                 return $value->method == $input['m'];
@@ -45,6 +45,11 @@ class RestLogsController extends Controller
     /**
      * Pagination for restlogs.
      *
+     * @param Array $items
+     * @param Integer $perPage
+     * @param Integer $page
+     * @param Array $options
+     * 
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function paginate($items, $perPage, $page = null, $options = [])
