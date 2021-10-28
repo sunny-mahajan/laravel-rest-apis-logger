@@ -23,11 +23,40 @@ class RestLogsController extends Controller
         $perPage = $input['s'] ?? 20;
         $offset = $perPage*($input['p']??'1');
         
-        if(isset($input['m']) && $restlogs != null)
+        if(isset($input['m']) && $restlogs != null )
         {
-            $restlogs = $restlogs->filter(function ($value, $key) use($input){
-                return $value->method == $input['m'];
-            });
+            if(isset($input['r']) && $input['r'] == 'SUCCESS')
+            {
+                $restlogs = $restlogs->filter(function ($value, $key) use($input){
+                    return $value->method == $input['m'] && $value->res_status < 400;
+                });
+            }
+            elseif(isset($input['r']) && $input['r'] == 'FAIL')
+            {
+                $restlogs = $restlogs->filter(function ($value, $key) use($input){
+                    return $value->method == $input['m'] && $value->res_status > 400;
+                });
+            }
+            else{
+                $restlogs = $restlogs->filter(function ($value, $key) use($input){
+                    return $value->method == $input['m'];
+                });
+            }
+
+        }
+        elseif(!is_array($restlogs)){
+            if(isset($input['r']) && $input['r'] == 'SUCCESS')
+            {
+                $restlogs = $restlogs->filter(function ($value, $key) use($input){
+                    return $value->res_status < 400;
+                });
+            }
+            elseif(isset($input['r']) && $input['r'] == 'FAIL')
+            {
+                $restlogs = $restlogs->filter(function ($value, $key) use($input){
+                    return $value->res_status > 400;
+                });
+            }
         }
         if(count($restlogs)> 0)
         {
