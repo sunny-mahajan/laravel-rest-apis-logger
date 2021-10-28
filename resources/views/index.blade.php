@@ -29,6 +29,7 @@
         .border-muted{
             box-shadow:0 1px 10px 0 #d7d9dc;
             height:50px;
+            border-radius: 6px;
         }
         .box-size{
             display: none;
@@ -43,6 +44,17 @@
         }
         .nounderline {
             text-decoration: none !important
+        }
+        .link{
+            cursor: pointer;
+        }
+        .collapse:not(.show) {
+            display: block;
+            height: 4rem;
+            overflow: hidden;
+        }
+        .collapsing {
+            height: 4rem;
         }
     </style>
 </head>
@@ -61,15 +73,24 @@
             <div class="container text-break">
                 <div class="w-100 d-flex justify-content-between">
                     <h3 class="text-center">Rest Logger</h3>
-                    <div class="text-center" onclick="callAjax();">
-                        <table class="border border-muted">
+                    <div>
+                        <table class="border-muted">
                             <tr>
-                                <td><a class="{{!Request::input('m') ? 'btn btn-info' : 'btn link' }}" id='all' href="/restlogs">ALL</a></td>
-                                <td><a class="{{Request::input('m') == 'GET' ? 'btn btn-success' : 'btn link' }}" id='get' href="?m=GET">GET</a></td>
-                                <td><a class="{{Request::input('m') == 'POST' ? 'btn btn-secondary' : 'btn link' }}" id='post' href="?m=POST">POST</a></td>
-                                <td><a class="{{Request::input('m') == 'PUT' ? 'btn btn-dark' : 'btn link' }}" id='put' href="?m=PUT">PUT</a></td>
-                                <td><a class="{{Request::input('m') == 'PATCH' ? 'btn btn-primary' : 'btn link' }}" id='put' href="?m=PATCH">PATCH</a></td>
-                                <td><a class="{{Request::input('m') == 'DELETE' ? 'btn btn-danger' : 'btn link' }}" id='delete' href="?m=DELETE">DELETE</a></td>
+                                <td><a class="{{!Request::input('m') ? 'btn btn-info' : 'btn link' }} ml-2" href="?r={{Request::input('r')}}">ALL</a></td>
+                                <td><a class="{{Request::input('m') == 'GET' ? 'btn btn-success' : 'btn link' }}" href="?m=GET&r={{Request::input('r')}}">GET</a></td>
+                                <td><a class="{{Request::input('m') == 'POST' ? 'btn btn-secondary' : 'btn link' }}" href="?m=POST&r={{Request::input('r')}}">POST</a></td>
+                                <td><a class="{{Request::input('m') == 'PUT' ? 'btn btn-dark' : 'btn link' }}" href="?m=PUT&r={{Request::input('r')}}">PUT</a></td>
+                                <td><a class="{{Request::input('m') == 'PATCH' ? 'btn btn-primary' : 'btn link' }}" href="?m=PATCH&r={{Request::input('r')}}">PATCH</a></td>
+                                <td><a class="{{Request::input('m') == 'DELETE' ? 'btn btn-danger' : 'btn link' }} mr-2" href="?m=DELETE&r={{Request::input('r')}}">DELETE</a></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div>
+                        <table class="border-muted">
+                            <tr>
+                            <td><a class="{{!Request::input('r') ? 'btn btn-info' : 'btn link' }} ml-2" href="?m={{Request::input('m')}}">ALL</a></td>
+                                <td><a class="{{Request::input('r') == 'SUCCESS' ? 'btn btn-success' : 'btn link' }}" id='all' href="?m={{Request::input('m')}}&r=SUCCESS">Success</a></td>
+                                <td><a class="{{Request::input('r') == 'FAIL' ? 'btn btn-danger' : 'btn link' }} mr-2" id='get' href="?m={{Request::input('m')}}&r=FAIL">Failed</a></td>
                             </tr>
                         </table>
                     </div>
@@ -90,14 +111,15 @@
                         <div><a class="text-dark" href="?m={{Request::input('m')}}&s=500">Show 500</a></div>
                     </div>
                     @if(!is_array($restlogs))
-                    <h5><a class="link {{$restlogs->currentPage() < $restlogs->lastPage() ? '' : 'disabled text-dark'}} nounderline" href="?m={{Request::input('m')}}&p={{$restlogs->currentPage()+1}}&s={{$restlogs->perPage()}}" >&nbsp;>></a> </h5>
-                    <div onclick="show()"> <span class="text-primary">Viewing {{$offset-$restlogs->perPage()+1}}-{{ $offset > $restlogs->total() ?$restlogs->total():$offset }}</span><span> of {{ $restlogs->total() }}</span></div>
-                    <h5><a class="link {{$restlogs->currentPage() > 1 ? '' : 'disabled text-dark'}} nounderline" href="?m={{Request::input('m')}}&p={{$restlogs->currentPage()-1}}&s={{$restlogs->perPage()}}"><<&nbsp;</a> </h5>
+                    <h5><a class="link {{$restlogs->currentPage() < $restlogs->lastPage() ? '' : 'disabled text-dark'}} nounderline" href="?m={{Request::input('m')}}&r={{Request::input('r')}}&p={{$restlogs->currentPage()+1}}&s={{$restlogs->perPage()}}" >&nbsp;>></a> </h5>
+                    <div onclick="show()"> <a class="link" >Viewing {{$offset-$restlogs->perPage()+1}}-{{ $offset > $restlogs->total() ?$restlogs->total():$offset }}</a><span> &nbsp;of {{ $restlogs->total() }}</span></div>
+                    <h5><a class="link {{$restlogs->currentPage() > 1 ? '' : 'disabled text-dark'}} nounderline" href="?m={{Request::input('m')}}&r={{Request::input('r')}}&p={{$restlogs->currentPage()-1}}&s={{$restlogs->perPage()}}"><<&nbsp;</a> </h5>
                     @endif
                 </div>
 
                 <div class="list-group">
                     @forelse ($restlogs as $key => $log)
+                    
                     <div class="list-group-item list-group-item-action my-2 border">
                         <div class="row w-100 align-items-center">
                             <span class="col-md-3">
@@ -140,8 +162,13 @@
                         <hr class="my-2"/>
 
                         <div class="row w-100 my-2 align-items-center">
-                            <span class="col-md-12 text-break"><b>Response Payload:</b> {{$log->res_payload}}</span>
+                            <span id ="viewMore{{$key}}" class="col-md-12 text-break collapse"><b>Response Payload:</b> {{$log->res_payload}}
+
+                            </span>
                         </div>
+                        @if($log->res_payload != 'null')
+                            <a id="viewLink{{$key}}" class="link float-right" data-toggle="collapse" data-target="#viewMore{{$key}}" onclick="viewLink('viewLink{{$key}}')">View More...</a>
+                        @endif
                     </div>
                     @empty
                     <div class="row w-100 my-2 align-items-center text-center">
@@ -159,6 +186,14 @@
                 x.style.display = "block";
             } else {
                 x.style.display = "none";
+            }
+        }
+        function viewLink(props) {
+            var y = document.getElementById(props);
+            if (y.innerHTML === "View More...") {
+                y.innerHTML = "View Less...";
+            } else {
+                y.innerHTML = "View More...";
             }
         }
      </script>
