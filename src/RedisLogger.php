@@ -8,17 +8,30 @@ use Illuminate\Support\Facades\Redis;
 class RedisLogger extends  AbstractLogger implements RestLoggerInterface
 {
     /**
-     * return all models
+     * Read logs from redis and return
+     *
+     * @return Array
      */
     public function getLogs()
     {
-        $lines =  Redis::get('restlogs');
-        $lines = json_decode($lines);
-        return collect($lines);
+        $logs =  Redis::get('restlogs');
+        if($logs != null)
+        {
+            $logs = json_decode($logs);
+            return collect($logs);
+        }
+        else{
+            return [];
+        }
+
     }
 
     /**
-     * save logs in redis
+     * Write logs to redis
+     *
+     * @param [type] $request
+     * @param [type] $response
+     * @return void
      */
     public function saveLogs($request, $response)
     {
@@ -30,7 +43,9 @@ class RedisLogger extends  AbstractLogger implements RestLoggerInterface
     }
 
     /**
-     * delete all logs
+     * Deletes all logs from redis
+     *
+     * @return void
      */
     public function deleteLogs()
     {
