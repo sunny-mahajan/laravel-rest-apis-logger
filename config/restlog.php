@@ -9,9 +9,4 @@ return [
         'password', 'password_confirmation', 'new_password', 'old_password',
     ],
 
-    'client' => env('REDIS_CLIENT', 'predis'), 
-    'port' => env('REDIS_PORT', '6379'),
-    'password' => env('REDIS_PASSWORD', null),
-    'host' => env('REDIS_HOST', '127.0.0.1'),
-
 ];
