@@ -105,14 +105,14 @@
                 </div>
 
                 <div class="d-flex flex-row-reverse mt-5">
-                    <div id="pageSize" class="box-size mt-5 mr-5">
+                    <div id="pageSize" class="box-size mt-5 mr-5" style="display:none;">
                         <div><a class="text-dark" href="?m={{Request::input('m')}}&s=50">Show 50</a></div>
                         <div><a class="text-dark" href="?m={{Request::input('m')}}&s=100">Show 100</a></div>
                         <div><a class="text-dark" href="?m={{Request::input('m')}}&s=500">Show 500</a></div>
                     </div>
                     @if(!is_array($restlogs))
                     <h5><a class="link {{$restlogs->currentPage() < $restlogs->lastPage() ? '' : 'disabled text-dark'}} nounderline" href="?m={{Request::input('m')}}&r={{Request::input('r')}}&p={{$restlogs->currentPage()+1}}&s={{$restlogs->perPage()}}" >&nbsp;>></a> </h5>
-                    <div onclick="show()"> <a class="link" >Viewing {{$offset-$restlogs->perPage()+1}}-{{ $offset > $restlogs->total() ?$restlogs->total():$offset }}</a><span> &nbsp;of {{ $restlogs->total() }}</span></div>
+                    <div onclick="show();"> <a class="link" >Viewing {{$offset-$restlogs->perPage()+1}}-{{ $offset > $restlogs->total() ?$restlogs->total():$offset }}</a><span> &nbsp;of {{ $restlogs->total() }}</span></div>
                     <h5><a class="link {{$restlogs->currentPage() > 1 ? '' : 'disabled text-dark'}} nounderline" href="?m={{Request::input('m')}}&r={{Request::input('r')}}&p={{$restlogs->currentPage()-1}}&s={{$restlogs->perPage()}}"><<&nbsp;</a> </h5>
                     @endif
                 </div>
@@ -182,7 +182,7 @@
     <script type="text/javascript">
         function show() {
             var x = document.getElementById("pageSize");
-            if (x.style.display === "none") {
+            if (x.style.display == "none") {
                 x.style.display = "block";
             } else {
                 x.style.display = "none";
@@ -190,7 +190,7 @@
         }
         function viewLink(props) {
             var y = document.getElementById(props);
-            if (y.innerHTML === "View More...") {
+            if (y.innerHTML == "View More...") {
                 y.innerHTML = "View Less...";
             } else {
                 y.innerHTML = "View More...";
