@@ -58,7 +58,7 @@ class RestLogsController extends Controller
                 });
             }
         }
-        if(count($restlogs)> 0)
+        if($restlogs != null)
         {
             $restlogs = $restlogs->sortByDesc('created_at');
             $restlogs = $this->paginate($restlogs, $perPage, $_GET['p']??"");
@@ -67,7 +67,6 @@ class RestLogsController extends Controller
         {
             $restlogs = [];
         }
-
         return view('restlog::index', compact('restlogs','offset'));
     }
 

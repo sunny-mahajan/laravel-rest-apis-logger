@@ -166,7 +166,7 @@
 
                             </span>
                         </div>
-                        @if($log->res_payload != 'null')
+                        @if(strlen($log->res_payload) > 1000)
                             <a id="viewLink{{$key}}" class="link float-right" data-toggle="collapse" data-target="#viewMore{{$key}}" onclick="viewLink('viewLink{{$key}}')">View More...</a>
                         @endif
                     </div>
