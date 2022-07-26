@@ -8,4 +8,5 @@ return [
     'exclude' => [
         'password', 'password_confirmation', 'new_password', 'old_password',
     ],
+
 ];

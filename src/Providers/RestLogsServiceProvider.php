@@ -8,6 +8,7 @@ use TF\Contracts\RestLoggerInterface;
 use TF\DBLogger;
 use TF\Exceptions\InvalidLogDriverException;
 use TF\FileLogger;
+use TF\RedisLogger;
 use TF\Http\Middleware\RestLogger;
 
 class RestLogsServiceProvider extends ServiceProvider
@@ -46,6 +47,9 @@ class RestLogsServiceProvider extends ServiceProvider
         switch ($driver) {
             case 'db':
                 $instance = DBLogger::class;
+                break;
+            case 'redis':
+                $instance = RedisLogger::class;
                 break;
 
             default:
