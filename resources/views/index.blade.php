@@ -17,8 +17,13 @@
     <!-- Styles -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-jsonview/1.2.3/jquery.jsonview.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-jsonview/1.2.3/jquery.jsonview.css" type="text/css" rel="stylesheet">
+    
 
     <style>
         .container{max-width: 90%;}
@@ -118,6 +123,7 @@
                 </div>
 
                 <div class="list-group">
+                    <?$i = 0?>
                     @forelse ($restlogs as $key => $log)
                     
                     <div class="list-group-item list-group-item-action my-2 border">
@@ -156,20 +162,100 @@
                         <hr class="my-2"/>
 
                         <div class="row w-100 my-2 align-items-center">
-                            <span class="col-md-12 text-break"><b>Request Payload:</b> {{$log->payload}}</span>
+                            <span class="col-md-12 text-break"><b>Request Headers:</b></span>
+                            <table class="border m-3">
+                                <tr class="border">
+                                    <th class="text-left border pl-2 pr-2">Key</th>
+                                    <th class="text-left border pl-2 pr-2">Value</th>
+                                </tr>
+                                <?foreach ($log->header as $key => $value) {
+                                 if ($key == 'accept') {
+                                    continue;
+                                } ?>                                
+                                <tr width="50%">
+                                    <td class="text-left border pl-2 pr-2">{{ json_encode($key) }}</td>
+                                    <td class="text-left border pl-2 pr-2">{{ json_encode($value) }}</td>
+                                </tr>
+                                <? } ?>
+                            </table>
                         </div>
 
                         <hr class="my-2"/>
 
                         <div class="row w-100 my-2 align-items-center">
-                            <span id ="viewMore{{$key}}" class="col-md-12 text-break collapse"><b>Response Payload:</b> {{$log->res_payload}}
-
-                            </span>
+                            <span class="col-md-12 text-break"><b>Response Headers:</b></span>
+                            <table class="border m-3">
+                                <tr class="border">
+                                    <th class="text-left border pl-2 pr-2">Key</th>
+                                    <th class="text-left border pl-2 pr-2">Value</th>
+                                </tr>
+                                <?foreach ($log->res_header as $key => $value) {
+                                 if ($key == 'accept') {
+                                    continue;
+                                } ?>
+                                <tr width="50%">
+                                    <td class="text-left border pl-2 pr-2">{{ json_encode($key) }}</td>
+                                    <td class="text-left border pl-2 pr-2">{{ json_encode($value) }}</td>
+                                </tr>
+                                <? } ?>
+                            </table>
                         </div>
-                        @if(strlen($log->res_payload) > 1000)
-                            <a id="viewLink{{$key}}" class="link float-right" data-toggle="collapse" data-target="#viewMore{{$key}}" onclick="viewLink('viewLink{{$key}}')">View More...</a>
-                        @endif
+
+                        <hr class="my-2"/>
+
+                        <div class="row w-100 my-2 align-items-center">
+                            <div class="container-fluid">
+                                <div class="col-md d-flex flex-row justify-content-between mt-2 align-items-center">
+                                    <span><b>Request Payload:</b> </span>
+                                    <span>
+                                        <a class="btn btn-secondary btn-sm" onclick="jsonView('payloadJsonButton{{$i}}', 'payload{{$i}}', '{{$log->payload}}')" id="payloadJsonButton{{$i}}">Raw</a>
+                                        <button data-theme="dark" id="copyText" onclick="copyText('payload-tooltip{{$i}}', '{{$log->payload}}')" style="border:none; background:none; padding-left:10px">
+                                            <span class="svg-icon svg-icon-primary svg-icon-2x" style="position:relative">
+                                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                        <rect x="0" y="0" width="24" height="24"/>
+                                                        <path d="M6,9 L6,15 C6,16.6568542 7.34314575,18 9,18 L15,18 L15,18.8181818 C15,20.2324881 14.2324881,21 12.8181818,21 L5.18181818,21 C3.76751186,21 3,20.2324881 3,18.8181818 L3,11.1818182 C3,9.76751186 3.76751186,9 5.18181818,9 L6,9 Z" fill="#000000" fill-rule="nonzero"/>
+                                                        <path d="M10.1818182,4 L17.8181818,4 C19.2324881,4 20,4.76751186 20,6.18181818 L20,13.8181818 C20,15.2324881 19.2324881,16 17.8181818,16 L10.1818182,16 C8.76751186,16 8,15.2324881 8,13.8181818 L8,6.18181818 C8,4.76751186 8.76751186,4 10.1818182,4 Z" fill="#000000" opacity="0.3"/>
+                                                    </g>
+                                                </svg>
+                                                <span id="payload-tooltip{{$i}}" style="visibility: hidden; float: right; position: absolute; right: 0px; word-break: keep-all; transform: translate(100%, 0px);">Copied!</span>						
+                                            </span>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                            <span class="col-md-12 text-break ml-3 jsonView" id="payload{{$i}}" style="max-height:300px; overflow-y:scroll;"> {{$log->payload}}</span>
+                        </div>
+
+                        <hr class="my-2"/>
+
+                        <div class="row w-100 my-2 align-items-center">
+                            <div class="container-fluid">
+                                <div class="col-md d-flex flex-row justify-content-between mt-2 align-items-center">
+                                    <span>
+                                        <b>Response Payload:</b>
+                                    </span>
+                                    <span>
+                                        <a class="btn btn-secondary btn-sm" onclick="jsonView('jsonButton{{$i}}', 'viewMore{{$i}}', '{{$log->res_payload}}')" id="jsonButton{{$i}}">Raw</a>
+                                        <button data-theme="dark" id="copyText" onclick="copyText('custom-tooltip{{$i}}', '{{$log->res_payload}}')" style="border:none; background:none; padding-left:10px">
+                                            <span class="svg-icon svg-icon-primary svg-icon-2x" style="position:relative">
+                                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                        <rect x="0" y="0" width="24" height="24"/>
+                                                        <path d="M6,9 L6,15 C6,16.6568542 7.34314575,18 9,18 L15,18 L15,18.8181818 C15,20.2324881 14.2324881,21 12.8181818,21 L5.18181818,21 C3.76751186,21 3,20.2324881 3,18.8181818 L3,11.1818182 C3,9.76751186 3.76751186,9 5.18181818,9 L6,9 Z" fill="#000000" fill-rule="nonzero"/>
+                                                        <path d="M10.1818182,4 L17.8181818,4 C19.2324881,4 20,4.76751186 20,6.18181818 L20,13.8181818 C20,15.2324881 19.2324881,16 17.8181818,16 L10.1818182,16 C8.76751186,16 8,15.2324881 8,13.8181818 L8,6.18181818 C8,4.76751186 8.76751186,4 10.1818182,4 Z" fill="#000000" opacity="0.3"/>
+                                                    </g>
+                                                </svg>
+                                                <span id="custom-tooltip{{$i}}" style="visibility: hidden; float: right; position: absolute; right: 0px; word-break: keep-all; transform: translate(100%, 0px);">Copied!</span>						
+                                            </span>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                            <span id ="viewMore{{$i}}" class="col-md-12 text-break ml-3 jsonView" style="max-height:300px; overflow-y:scroll;">{{$log->res_payload}}</span>
+                        </div>
                     </div>
+                    <?$i++?>
                     @empty
                     <div class="row w-100 my-2 align-items-center text-center">
                         <h6 class="col-md-12">Looks like you don't have any logs yet</h6>
@@ -179,7 +265,17 @@
             </div>
         </main>
     </div>
-    <script type="text/javascript">
+    <script>
+        $(document).ready(function(){
+            var container = document.getElementsByClassName('jsonView');
+            var containerArr = Array.prototype.slice.call(container, 0);
+            containerArr.map(function(item){
+                if(item.innerHTML) {
+                    $(`#${item.id}`).JSONView(item.innerHTML, {collapsed: false, withQuotes: true, withLinks: true});
+                }
+            })
+        });
+
         function show() {
             var x = document.getElementById("pageSize");
             if (x.style.display == "none") {
@@ -188,13 +284,35 @@
                 x.style.display = "none";
             }
         }
-        function viewLink(props) {
-            var y = document.getElementById(props);
-            if (y.innerHTML == "View More...") {
-                y.innerHTML = "View Less...";
+
+        function jsonView(buttonId, textId, data) {
+            var item = document.getElementById(buttonId);
+            var container = document.getElementById(textId);
+            var text = JSON.parse(data);
+            if (item.innerHTML == "Raw") {
+                item.innerHTML = "Json";
+                container.innerText = JSON.stringify(text);
             } else {
-                y.innerHTML = "View More...";
+                item.innerHTML = "Raw";
+                $(`#${textId}`).JSONView(text, {collapsed: false, withQuotes: true, withLinks: true});
             }
+        }
+
+        function copyText(tooltipId, data){
+            copyToClipboard(data);
+            document.getElementById(tooltipId).style.visibility = 'visible';
+            setTimeout( function() {
+                document.getElementById(tooltipId).style.visibility = "hidden";
+            }, 1000);
+        }
+
+        function copyToClipboard(text) {
+            var sampleTextarea = document.createElement("textarea");
+            document.body.appendChild(sampleTextarea);
+            sampleTextarea.value = text; //save main text in it
+            sampleTextarea.select(); //select textarea contenrs
+            document.execCommand("copy");
+            document.body.removeChild(sampleTextarea);
         }
      </script>
 </body>
