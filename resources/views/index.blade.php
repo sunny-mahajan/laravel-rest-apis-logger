@@ -204,12 +204,13 @@
                         <hr class="my-2"/>
 
                         <div class="row w-100 my-2 align-items-center">
+                            @if (strlen($log->payload) > 2)
                             <div class="container-fluid">
                                 <div class="col-md d-flex flex-row justify-content-between mt-2 align-items-center">
-                                    <span><b>Request Payload:</b> </span>
+                                    <span><b>Request Payload:</b></span>
                                     <span>
-                                        <a class="btn btn-secondary btn-sm" onclick="jsonView('payloadJsonButton{{$i}}', 'payload{{$i}}', '{{$log->payload}}')" id="payloadJsonButton{{$i}}">Raw</a>
-                                        <button data-theme="dark" id="copyText" onclick="copyText('payload-tooltip{{$i}}', '{{$log->payload}}')" style="border:none; background:none; padding-left:10px">
+                                        <a class="btn btn-secondary btn-sm" onclick="jsonView('payloadJsonButton{{$i}}', 'payload{{$i}}', '{{$log->payload}}', 'payloadCopyText{{$i}}')" id="payloadJsonButton{{$i}}">Raw</a>
+                                        <button data-theme="dark" id="payloadCopyText{{$i}}" onclick="copyText('payload-tooltip{{$i}}', '{{$log->payload}}')" style="border:none; background:none; padding-left:10px; visibility:hidden;" title="Copy Text" class="copyText">
                                             <span class="svg-icon svg-icon-primary svg-icon-2x" style="position:relative">
                                                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -224,20 +225,25 @@
                                     </span>
                                 </div>
                             </div>
-                            <span class="col-md-12 text-break ml-3 jsonView" id="payload{{$i}}" style="max-height:300px; overflow-y:scroll;"> {{$log->payload}}</span>
+                            <span class="col-md-12 text-break ml-3 mt-3 jsonView" id="payload{{$i}}" style="max-height:300px; overflow-y:scroll;"> {{$log->payload}}</span>
+                            @else
+                            <div class="d-flex flex-column ml-4">
+                                <span><b>Request Payload:</b></span>
+                                <h6 class="mt-2">N/A</h6>
+                            </div>
+                            @endif
                         </div>
 
                         <hr class="my-2"/>
 
                         <div class="row w-100 my-2 align-items-center">
+                            @if (strlen($log->res_payload) > 2)
                             <div class="container-fluid">
                                 <div class="col-md d-flex flex-row justify-content-between mt-2 align-items-center">
+                                    <span><b>Response Payload:</b></span>
                                     <span>
-                                        <b>Response Payload:</b>
-                                    </span>
-                                    <span>
-                                        <a class="btn btn-secondary btn-sm" onclick="jsonView('jsonButton{{$i}}', 'viewMore{{$i}}', '{{$log->res_payload}}')" id="jsonButton{{$i}}">Raw</a>
-                                        <button data-theme="dark" id="copyText" onclick="copyText('custom-tooltip{{$i}}', '{{$log->res_payload}}')" style="border:none; background:none; padding-left:10px">
+                                        <a class="btn btn-secondary btn-sm" onclick="jsonView('jsonButton{{$i}}', 'viewMore{{$i}}', '{{$log->res_payload}}', 'copyText{{$i}}')" id="jsonButton{{$i}}">Raw</a>
+                                        <button data-theme="dark" id="copyText{{$i}}" onclick="copyText('custom-tooltip{{$i}}', '{{$log->res_payload}}')" style="border:none; background:none; padding-left:10px; visibility:hidden;" title="Copy Text" class="copyText">
                                             <span class="svg-icon svg-icon-primary svg-icon-2x" style="position:relative">
                                                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -252,7 +258,13 @@
                                     </span>
                                 </div>
                             </div>
-                            <span id ="viewMore{{$i}}" class="col-md-12 text-break ml-3 jsonView" style="max-height:300px; overflow-y:scroll;">{{$log->res_payload}}</span>
+                            <span id ="viewMore{{$i}}" class="col-md-12 text-break ml-3 mt-3 jsonView" style="max-height:300px; overflow-y:scroll;">{{$log->res_payload}}</span>
+                            @else
+                            <div class="d-flex flex-column ml-4">
+                                <span><b>Response Payload:</b></span>
+                                <h6 class="mt-2">N/A</h6>
+                            </div>
+                            @endif
                         </div>
                     </div>
                     <?$i++?>
@@ -273,7 +285,7 @@
                 if(item.innerHTML) {
                     $(`#${item.id}`).JSONView(item.innerHTML, {collapsed: false, withQuotes: true, withLinks: true});
                 }
-            })
+            });
         });
 
         function show() {
@@ -285,16 +297,18 @@
             }
         }
 
-        function jsonView(buttonId, textId, data) {
+        function jsonView(buttonId, textId, data, copyTextId) {
             var item = document.getElementById(buttonId);
             var container = document.getElementById(textId);
             var text = JSON.parse(data);
             if (item.innerHTML == "Raw") {
                 item.innerHTML = "Json";
                 container.innerText = JSON.stringify(text);
+                document.getElementById(copyTextId).style.visibility = "visible";
             } else {
                 item.innerHTML = "Raw";
                 $(`#${textId}`).JSONView(text, {collapsed: false, withQuotes: true, withLinks: true});
+                document.getElementById(copyTextId).style.visibility = "hidden";
             }
         }
 
