@@ -88,6 +88,8 @@ abstract class AbstractLogger
         $this->logs['action'] = $action;
         $this->logs['models'] = $models;
         $this->logs['ip'] = $request->ip();
+        $this->logs['header'] = $request->header();
+        $this->logs['res_header'] = $response->headers->all();
 
         return $this->logs;
     }
