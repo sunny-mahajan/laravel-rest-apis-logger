@@ -13,6 +13,7 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com" />
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <!-- Styles -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
@@ -53,13 +54,16 @@
         .link{
             cursor: pointer;
         }
+        .link:hover{
+            text-decoration: none;
+        }
         .collapse:not(.show) {
             display: block;
-            height: 4rem;
+            height: 1.5rem;
             overflow: hidden;
         }
         .collapsing {
-            height: 4rem;
+            height: 1.5rem;
         }
     </style>
 </head>
@@ -125,7 +129,6 @@
                 <div class="list-group">
                     <?$i = 0?>
                     @forelse ($restlogs as $key => $log)
-                    
                     <div class="list-group-item list-group-item-action my-2 border">
                         <div class="row w-100 align-items-center">
                             <span class="col-md-3">
@@ -160,111 +163,113 @@
                         </div>
 
                         <hr class="my-2"/>
-
-                        <div class="row w-100 my-2 align-items-center">
-                            <span class="col-md-12 text-break"><b>Request Headers:</b></span>
-                            <table class="border m-3">
-                                <tr class="border">
-                                    <th class="text-left border pl-2 pr-2">Key</th>
-                                    <th class="text-left border pl-2 pr-2">Value</th>
-                                </tr>
-                                <?foreach ($log->header as $key => $value) {
-                                 if ($key == 'accept') {
-                                    continue;
-                                } ?>                                
-                                <tr width="50%">
-                                    <td class="text-left border pl-2 pr-2">{{ json_encode($key) }}</td>
-                                    <td class="text-left border pl-2 pr-2">{{ json_encode($value) }}</td>
-                                </tr>
-                                <? } ?>
-                            </table>
-                        </div>
-
-                        <hr class="my-2"/>
-
-                        <div class="row w-100 my-2 align-items-center">
-                            <span class="col-md-12 text-break"><b>Response Headers:</b></span>
-                            <table class="border m-3">
-                                <tr class="border">
-                                    <th class="text-left border pl-2 pr-2">Key</th>
-                                    <th class="text-left border pl-2 pr-2">Value</th>
-                                </tr>
-                                <?foreach ($log->res_header as $key => $value) {
-                                 if ($key == 'accept') {
-                                    continue;
-                                } ?>
-                                <tr width="50%">
-                                    <td class="text-left border pl-2 pr-2">{{ json_encode($key) }}</td>
-                                    <td class="text-left border pl-2 pr-2">{{ json_encode($value) }}</td>
-                                </tr>
-                                <? } ?>
-                            </table>
-                        </div>
-
-                        <hr class="my-2"/>
-
-                        <div class="row w-100 my-2 align-items-center">
-                            @if (strlen($log->payload) > 2)
-                            <div class="container-fluid">
-                                <div class="col-md d-flex flex-row justify-content-between mt-2 align-items-center">
+                        <div id="responseContainer{{$i}}" class="collapse align-items-center">
+                            <a class="link float-right text-dark" data-toggle="collapse" data-target="#responseContainer{{$i}}" onclick="changeIcon('icon{{$key}}', 'link{{$i}}')" title="Show more"><span id="link{{$i}}">Show more </span><i class="fa fa-angle-down" style="font-size:20px" id="icon{{$key}}"></i></a>
+                            <div class="row w-100 my-2 align-items-center">
+                                <span class="col-md-12 text-break"><b>Request Headers:</b></span>
+                                <table class="border m-3">
+                                    <tr class="border">
+                                        <th class="text-left border pl-2 pr-2">Key</th>
+                                        <th class="text-left border pl-2 pr-2">Value</th>
+                                    </tr>
+                                    <?foreach ($log->header as $key => $value) {
+                                     if ($key == 'accept') {
+                                        continue;
+                                    } ?>                                
+                                    <tr width="50%">
+                                        <td class="text-left border pl-2 pr-2">{{ json_encode($key) }}</td>
+                                        <td class="text-left border pl-2 pr-2">{{ json_encode($value) }}</td>
+                                    </tr>
+                                    <? } ?>
+                                </table>
+                            </div>
+    
+                            <hr class="my-2"/>
+    
+                            <div class="row w-100 my-2 align-items-center">
+                                <span class="col-md-12 text-break"><b>Response Headers:</b></span>
+                                <table class="border m-3">
+                                    <tr class="border">
+                                        <th class="text-left border pl-2 pr-2">Key</th>
+                                        <th class="text-left border pl-2 pr-2">Value</th>
+                                    </tr>
+                                    <?foreach ($log->res_header as $key => $value) {
+                                     if ($key == 'accept') {
+                                        continue;
+                                    } ?>
+                                    <tr width="50%">
+                                        <td class="text-left border pl-2 pr-2">{{ json_encode($key) }}</td>
+                                        <td class="text-left border pl-2 pr-2">{{ json_encode($value) }}</td>
+                                    </tr>
+                                    <? } ?>
+                                </table>
+                            </div>
+    
+                            <hr class="my-2"/>
+    
+                            <div class="row w-100 my-2 align-items-center">
+                                @if (strlen($log->payload) > 2)
+                                <div class="container-fluid">
+                                    <div class="col-md d-flex flex-row justify-content-between mt-2 align-items-center">
+                                        <span><b>Request Payload:</b></span>
+                                        <span>
+                                            <a class="btn btn-secondary btn-sm" onclick="jsonView('payloadJsonButton{{$i}}', 'payload{{$i}}', '{{$log->payload}}', 'payloadCopyText{{$i}}')" id="payloadJsonButton{{$i}}">Raw</a>
+                                            <button data-theme="dark" id="payloadCopyText{{$i}}" onclick="copyText('payload-tooltip{{$i}}', '{{$log->payload}}')" style="border:none; background:none; padding-left:10px; visibility:hidden;" title="Copy Text" class="copyText">
+                                                <span class="svg-icon svg-icon-primary svg-icon-2x" style="position:relative">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                            <rect x="0" y="0" width="24" height="24"/>
+                                                            <path d="M6,9 L6,15 C6,16.6568542 7.34314575,18 9,18 L15,18 L15,18.8181818 C15,20.2324881 14.2324881,21 12.8181818,21 L5.18181818,21 C3.76751186,21 3,20.2324881 3,18.8181818 L3,11.1818182 C3,9.76751186 3.76751186,9 5.18181818,9 L6,9 Z" fill="#000000" fill-rule="nonzero"/>
+                                                            <path d="M10.1818182,4 L17.8181818,4 C19.2324881,4 20,4.76751186 20,6.18181818 L20,13.8181818 C20,15.2324881 19.2324881,16 17.8181818,16 L10.1818182,16 C8.76751186,16 8,15.2324881 8,13.8181818 L8,6.18181818 C8,4.76751186 8.76751186,4 10.1818182,4 Z" fill="#000000" opacity="0.3"/>
+                                                        </g>
+                                                    </svg>
+                                                    <span id="payload-tooltip{{$i}}" style="visibility: hidden; float: right; position: absolute; right: 0px; word-break: keep-all; transform: translate(100%, 0px);">Copied!</span>						
+                                                </span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <span class="col-md-12 text-break ml-3 mt-3 jsonView" id="payload{{$i}}" style="max-height:300px; overflow-y:scroll;"> {{$log->payload}}</span>
+                                @else
+                                <div class="d-flex flex-column ml-4">
                                     <span><b>Request Payload:</b></span>
-                                    <span>
-                                        <a class="btn btn-secondary btn-sm" onclick="jsonView('payloadJsonButton{{$i}}', 'payload{{$i}}', '{{$log->payload}}', 'payloadCopyText{{$i}}')" id="payloadJsonButton{{$i}}">Raw</a>
-                                        <button data-theme="dark" id="payloadCopyText{{$i}}" onclick="copyText('payload-tooltip{{$i}}', '{{$log->payload}}')" style="border:none; background:none; padding-left:10px; visibility:hidden;" title="Copy Text" class="copyText">
-                                            <span class="svg-icon svg-icon-primary svg-icon-2x" style="position:relative">
-                                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                        <rect x="0" y="0" width="24" height="24"/>
-                                                        <path d="M6,9 L6,15 C6,16.6568542 7.34314575,18 9,18 L15,18 L15,18.8181818 C15,20.2324881 14.2324881,21 12.8181818,21 L5.18181818,21 C3.76751186,21 3,20.2324881 3,18.8181818 L3,11.1818182 C3,9.76751186 3.76751186,9 5.18181818,9 L6,9 Z" fill="#000000" fill-rule="nonzero"/>
-                                                        <path d="M10.1818182,4 L17.8181818,4 C19.2324881,4 20,4.76751186 20,6.18181818 L20,13.8181818 C20,15.2324881 19.2324881,16 17.8181818,16 L10.1818182,16 C8.76751186,16 8,15.2324881 8,13.8181818 L8,6.18181818 C8,4.76751186 8.76751186,4 10.1818182,4 Z" fill="#000000" opacity="0.3"/>
-                                                    </g>
-                                                </svg>
-                                                <span id="payload-tooltip{{$i}}" style="visibility: hidden; float: right; position: absolute; right: 0px; word-break: keep-all; transform: translate(100%, 0px);">Copied!</span>						
-                                            </span>
-                                        </button>
-                                    </span>
+                                    <h6 class="mt-2">N/A</h6>
                                 </div>
+                                @endif
                             </div>
-                            <span class="col-md-12 text-break ml-3 mt-3 jsonView" id="payload{{$i}}" style="max-height:300px; overflow-y:scroll;"> {{$log->payload}}</span>
-                            @else
-                            <div class="d-flex flex-column ml-4">
-                                <span><b>Request Payload:</b></span>
-                                <h6 class="mt-2">N/A</h6>
-                            </div>
-                            @endif
-                        </div>
 
-                        <hr class="my-2"/>
+                            <hr class="my-2"/>
 
-                        <div class="row w-100 my-2 align-items-center">
-                            @if (strlen($log->res_payload) > 2)
-                            <div class="container-fluid">
-                                <div class="col-md d-flex flex-row justify-content-between mt-2 align-items-center">
+                            <div class="row w-100 my-2 align-items-center">
+                                @if (strlen($log->res_payload) > 2)
+                                <div class="container-fluid">
+                                    <div class="col-md d-flex flex-row justify-content-between mt-2 align-items-center">
+                                        <span><b>Response Payload:</b></span>
+                                        <span>
+                                            <a class="btn btn-secondary btn-sm" onclick="jsonView('jsonButton{{$i}}', 'viewMore{{$i}}', '{{$log->res_payload}}', 'copyText{{$i}}')" id="jsonButton{{$i}}">Raw</a>
+                                            <button data-theme="dark" id="copyText{{$i}}" onclick="copyText('custom-tooltip{{$i}}', '{{$log->res_payload}}')" style="border:none; background:none; padding-left:10px; visibility:hidden;" title="Copy Text" class="copyText">
+                                                <span class="svg-icon svg-icon-primary svg-icon-2x" style="position:relative">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                            <rect x="0" y="0" width="24" height="24"/>
+                                                            <path d="M6,9 L6,15 C6,16.6568542 7.34314575,18 9,18 L15,18 L15,18.8181818 C15,20.2324881 14.2324881,21 12.8181818,21 L5.18181818,21 C3.76751186,21 3,20.2324881 3,18.8181818 L3,11.1818182 C3,9.76751186 3.76751186,9 5.18181818,9 L6,9 Z" fill="#000000" fill-rule="nonzero"/>
+                                                            <path d="M10.1818182,4 L17.8181818,4 C19.2324881,4 20,4.76751186 20,6.18181818 L20,13.8181818 C20,15.2324881 19.2324881,16 17.8181818,16 L10.1818182,16 C8.76751186,16 8,15.2324881 8,13.8181818 L8,6.18181818 C8,4.76751186 8.76751186,4 10.1818182,4 Z" fill="#000000" opacity="0.3"/>
+                                                        </g>
+                                                    </svg>
+                                                    <span id="custom-tooltip{{$i}}" style="visibility: hidden; float: right; position: absolute; right: 0px; word-break: keep-all; transform: translate(100%, 0px);">Copied!</span>						
+                                                </span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <span id ="viewMore{{$i}}" class="col-md-12 text-break ml-3 mt-3 jsonView" style="max-height:300px; overflow-y:scroll;">{{$log->res_payload}}</span>
+                                @else
+                                <div class="d-flex flex-column ml-4">
                                     <span><b>Response Payload:</b></span>
-                                    <span>
-                                        <a class="btn btn-secondary btn-sm" onclick="jsonView('jsonButton{{$i}}', 'viewMore{{$i}}', '{{$log->res_payload}}', 'copyText{{$i}}')" id="jsonButton{{$i}}">Raw</a>
-                                        <button data-theme="dark" id="copyText{{$i}}" onclick="copyText('custom-tooltip{{$i}}', '{{$log->res_payload}}')" style="border:none; background:none; padding-left:10px; visibility:hidden;" title="Copy Text" class="copyText">
-                                            <span class="svg-icon svg-icon-primary svg-icon-2x" style="position:relative">
-                                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                        <rect x="0" y="0" width="24" height="24"/>
-                                                        <path d="M6,9 L6,15 C6,16.6568542 7.34314575,18 9,18 L15,18 L15,18.8181818 C15,20.2324881 14.2324881,21 12.8181818,21 L5.18181818,21 C3.76751186,21 3,20.2324881 3,18.8181818 L3,11.1818182 C3,9.76751186 3.76751186,9 5.18181818,9 L6,9 Z" fill="#000000" fill-rule="nonzero"/>
-                                                        <path d="M10.1818182,4 L17.8181818,4 C19.2324881,4 20,4.76751186 20,6.18181818 L20,13.8181818 C20,15.2324881 19.2324881,16 17.8181818,16 L10.1818182,16 C8.76751186,16 8,15.2324881 8,13.8181818 L8,6.18181818 C8,4.76751186 8.76751186,4 10.1818182,4 Z" fill="#000000" opacity="0.3"/>
-                                                    </g>
-                                                </svg>
-                                                <span id="custom-tooltip{{$i}}" style="visibility: hidden; float: right; position: absolute; right: 0px; word-break: keep-all; transform: translate(100%, 0px);">Copied!</span>						
-                                            </span>
-                                        </button>
-                                    </span>
+                                    <h6 class="mt-2">N/A</h6>
                                 </div>
+                                @endif
                             </div>
-                            <span id ="viewMore{{$i}}" class="col-md-12 text-break ml-3 mt-3 jsonView" style="max-height:300px; overflow-y:scroll;">{{$log->res_payload}}</span>
-                            @else
-                            <div class="d-flex flex-column ml-4">
-                                <span><b>Response Payload:</b></span>
-                                <h6 class="mt-2">N/A</h6>
-                            </div>
-                            @endif
                         </div>
                     </div>
                     <?$i++?>
@@ -302,7 +307,7 @@
             var container = document.getElementById(textId);
             var text = JSON.parse(data);
             if (item.innerHTML == "Raw") {
-                item.innerHTML = "Json";
+                item.innerHTML = "Preview";
                 container.innerText = JSON.stringify(text);
                 document.getElementById(copyTextId).style.visibility = "visible";
             } else {
@@ -327,6 +332,16 @@
             sampleTextarea.select(); //select textarea contenrs
             document.execCommand("copy");
             document.body.removeChild(sampleTextarea);
+        }
+
+        function changeIcon(id, linkId) {
+            if ($(`#${id}`).attr('class') == 'fa fa-angle-up') {
+                $(`#${id}`).attr('class', 'fa fa-angle-down');
+                $(`#${linkId}`).text('Show more ');
+            } else {
+                $(`#${id}`).attr('class', 'fa fa-angle-up');
+                $(`#${linkId}`).text('Show less ');
+            }
         }
      </script>
 </body>
