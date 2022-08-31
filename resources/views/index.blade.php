@@ -287,7 +287,9 @@
             var container = document.getElementsByClassName('jsonView');
             var containerArr = Array.prototype.slice.call(container, 0);
             containerArr.map(function(item){
-                if(item.innerHTML) {
+                if(item.innerHTML.includes('!doctype')) {
+                    $(`#${item.id}`).JSONView(JSON.stringify(item.innerHTML), {collapsed: true, withQuotes: true, withLinks: true});
+                } else {
                     $(`#${item.id}`).JSONView(item.innerHTML, {collapsed: false, withQuotes: true, withLinks: true});
                 }
             });
