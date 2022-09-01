@@ -166,42 +166,63 @@
                         <div id="responseContainer{{$i}}" class="collapse align-items-center">
                             <a class="link float-right text-dark" data-toggle="collapse" data-target="#responseContainer{{$i}}" onclick="changeIcon('icon{{$key}}', 'link{{$i}}')" title="Show more"><span id="link{{$i}}">Show more </span><i class="fa fa-angle-down" style="font-size:20px" id="icon{{$key}}"></i></a>
                             <div class="row w-100 my-2 align-items-center">
+                                <? if ($log->header) { ?>
                                 <span class="col-md-12 text-break"><b>Request Headers:</b></span>
                                 <table class="border m-3">
                                     <tr class="border">
                                         <th class="text-left border pl-2 pr-2">Key</th>
                                         <th class="text-left border pl-2 pr-2">Value</th>
                                     </tr>
-                                    <?foreach ($log->header as $key => $value) {
-                                     if ($key == 'accept') {
-                                        continue;
-                                    } ?>                                
-                                    <tr width="50%">
-                                        <td class="text-left border pl-2 pr-2">{{ json_encode($key) }}</td>
-                                        <td class="text-left border pl-2 pr-2">{{ json_encode($value) }}</td>
-                                    </tr>
-                                    <? } ?>
+                                        <? if(is_string($log->header)) {
+                                            $log->header = json_decode($log->header);
+                                        }
+                                        foreach ($log->header as $key => $value) {
+                                            if ($key == 'accept') {
+                                                continue;
+                                            } ?>                                
+                                            <tr width="50%">
+                                                <td class="text-left border pl-2 pr-2">{{ json_encode($key) }}</td>
+                                                <td class="text-left border pl-2 pr-2">{{ json_encode($value) }}</td>
+                                            </tr>
+                                        <? } ?>
+                                    <? } else { ?>
+                                        <div class="d-flex flex-column ml-4">
+                                            <span><b>Request Headers:</b></span>
+                                            <h6 class="mt-2">N/A</h6>
+                                        </div>
+                                        <? } ?>
                                 </table>
                             </div>
     
                             <hr class="my-2"/>
     
                             <div class="row w-100 my-2 align-items-center">
+                                <? if ($log->res_header) { ?>
                                 <span class="col-md-12 text-break"><b>Response Headers:</b></span>
                                 <table class="border m-3">
                                     <tr class="border">
                                         <th class="text-left border pl-2 pr-2">Key</th>
                                         <th class="text-left border pl-2 pr-2">Value</th>
                                     </tr>
-                                    <?foreach ($log->res_header as $key => $value) {
-                                     if ($key == 'accept') {
-                                        continue;
-                                    } ?>
-                                    <tr width="50%">
-                                        <td class="text-left border pl-2 pr-2">{{ json_encode($key) }}</td>
-                                        <td class="text-left border pl-2 pr-2">{{ json_encode($value) }}</td>
-                                    </tr>
-                                    <? } ?>
+                                    <?
+                                        if(is_string($log->res_header)) {
+                                            $log->res_header = json_decode($log->res_header);
+                                        }
+                                        foreach ($log->res_header as $key => $value) {
+                                            if ($key == 'accept') {
+                                                continue;
+                                            } ?>
+                                            <tr width="50%">
+                                                <td class="text-left border pl-2 pr-2">{{ json_encode($key) }}</td>
+                                                <td class="text-left border pl-2 pr-2">{{ json_encode($value) }}</td>
+                                            </tr>
+                                        <? } ?>
+                                    <? } else { ?>
+                                        <div class="d-flex flex-column ml-4">
+                                            <span><b>Response Headers:</b></span>
+                                            <h6 class="mt-2">N/A</h6>
+                                        </div>
+                                        <? } ?>
                                 </table>
                             </div>
     
@@ -246,7 +267,9 @@
                                     <div class="col-md d-flex flex-row justify-content-between mt-2 align-items-center">
                                         <span><b>Response Payload:</b></span>
                                         <span>
+                                            @if (!($log->res_status > 400))
                                             <a class="btn btn-secondary btn-sm" onclick="jsonView('jsonButton{{$i}}', 'viewMore{{$i}}', '{{$log->res_payload}}', 'copyText{{$i}}')" id="jsonButton{{$i}}">Raw</a>
+                                            @endif
                                             <button data-theme="dark" id="copyText{{$i}}" onclick="copyText('custom-tooltip{{$i}}', '{{$log->res_payload}}')" style="border:none; background:none; padding-left:10px; visibility:hidden;" title="Copy Text" class="copyText">
                                                 <span class="svg-icon svg-icon-primary svg-icon-2x" style="position:relative">
                                                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">

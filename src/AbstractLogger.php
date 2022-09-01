@@ -88,8 +88,8 @@ abstract class AbstractLogger
         $this->logs['action'] = $action;
         $this->logs['models'] = $models;
         $this->logs['ip'] = $request->ip();
-        $this->logs['header'] = $request->header();
-        $this->logs['res_header'] = $response->headers->all();
+        $this->logs['header'] = json_encode($request->header());
+        $this->logs['res_header'] = json_encode($response->headers->all());
 
         return $this->logs;
     }
@@ -114,6 +114,8 @@ abstract class AbstractLogger
         $model->action = $data[8];
         $model->models = $data[9];
         $model->ip = $data[10];
+        $model->header = $data[11] ?? null;
+        $model->res_header = $data[12] ?? null;
         return $model;
     }
 
