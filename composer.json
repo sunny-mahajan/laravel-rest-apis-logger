@@ -1,25 +1,34 @@
 {
-    "autoload": {
-        "psr-4": {
-            "TF\\": "src/"
-        }
-    },
-    "name": "tfspl/restlogger",
-    "description": "Small laravel package for viewing rest api logs for debugging.",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Sunny Kumar",
-            "email": "sunny@techformation.co.in"
-        }
-    ],
-    "extra": {
-        "laravel": {
-            "providers": [
-                "TF\\Providers\\RestLogsServiceProvider"
-            ]
-        }
-    },
-    "minimum-stability": "stable"
+  "autoload": {
+    "psr-4": {
+      "TF\\": "src/"
+    }
+  },
+  "name": "tfspl/restlogger",
+  "description": "Small laravel package for viewing rest api logs for debugging.",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Sunny Kumar",
+      "email": "sunny@techformation.co.in"
+    }
+  ],
+  "extra": {
+    "laravel": {
+      "providers": [
+        "TF\\Providers\\RestLogsServiceProvider"
+      ]
+    }
+  },
+  "require": {
+    "php": ">=7.2",
+    "ext-intl": "*",
+    "ext-mbstring": "*"
+  },
+  "require-dev": {
+    "mockery/mockery": ">=1.2",
+    "phpunit/phpunit": ">=9.0"
+  },
+  "minimum-stability": "stable"
 }
