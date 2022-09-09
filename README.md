@@ -11,10 +11,7 @@ composer require tfspl/restlogger
 ```
 ## Usage
 
-1.  Laravel 5.5 and higher uses Package Auto-Discovery, so doesn't require you to manually add
-the ServiceProvider.
-
-2. Publish the config file with:
+1. Publish the config file with:
 
 ```bash
 php artisan vendor:publish --tag=config --provider="TF\Providers\RestLogsServiceProvider"
@@ -36,9 +33,9 @@ You can also configure which fields should not be logged like passwords, secrets
 php artisan migrate
 ```
 
-3. Add middleware named ***restlogger*** to the route or controller you want to log data
+2. Add middleware named ***restlogger*** to the route or controller you want to log data
 
-4. Dashboard can be accessible via ***yourdomain.com/restlogs***
+3. Dashboard can be accessible via ***yourdomain.com/restlogs***
 
 ## Clear the logs
 
