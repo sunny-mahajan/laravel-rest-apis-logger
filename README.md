@@ -12,12 +12,7 @@ composer require tfspl/restlogger
 ## Usage
 
 1.  Laravel 5.5 and higher uses Package Auto-Discovery, so doesn't require you to manually add
-the ServiceProvider. If you use a lower version of Laravel you must register it in your 
-_app.php_ file:
-
-```bash
-TF\Providers\RestLogsServiceProvider::class
-```
+the ServiceProvider.
 
 2. Publish the config file with:
 
@@ -25,9 +20,13 @@ TF\Providers\RestLogsServiceProvider::class
 php artisan vendor:publish --tag=config --provider="TF\Providers\RestLogsServiceProvider"
 ```
 
-The config file is called *restlogs.php*. Currently supported drivers are *db* and *file*
+The config file is called *restlogs.php*. Currently supported drivers are *db*, *file* and *redis*.
 
-By default the logger will use *file* to log the data. But if you want to use Database for logging, migrate table by using
+By default the logger will use *file* to log the data. If you want to use redis for logging make sure 
+
+that you have installed the laravel package *predis/predis*. But if you want to use Database for logging,
+
+migrate table by using below command.
 
 You can also configure which fields should not be logged like passwords, secrets, etc.
 
