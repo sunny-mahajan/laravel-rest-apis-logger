@@ -127,7 +127,7 @@
                 </div>
 
                 <div class="list-group">
-                    <?$i = 0?>
+                    <?php $i = 0?>
                     @forelse ($restlogs as $key => $log)
                     <div class="list-group-item list-group-item-action my-2 border">
                         <div class="row w-100 align-items-center">
@@ -182,7 +182,7 @@
                                             } ?>                                
                                             <tr width="50%">
                                                 <td class="text-left border pl-2 pr-2">{{ json_encode($key) }}</td>
-                                                <td class="text-left border pl-2 pr-2">{{ json_encode($value) }}</td>
+                                                <td class="text-left border pl-2 pr-2">{{ isset($value) ? json_encode($value) : '' }}</td>
                                             </tr>
                                         <? } ?>
                                     <? } else { ?>
@@ -214,7 +214,7 @@
                                             } ?>
                                             <tr width="50%">
                                                 <td class="text-left border pl-2 pr-2">{{ json_encode($key) }}</td>
-                                                <td class="text-left border pl-2 pr-2">{{ json_encode($value) }}</td>
+                                                <td class="text-left border pl-2 pr-2">{{ isset($value) ? json_encode($value) : '' }}</td>
                                             </tr>
                                         <? } ?>
                                     <? } else { ?>
