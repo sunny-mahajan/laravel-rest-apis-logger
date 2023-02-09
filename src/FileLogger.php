@@ -4,6 +4,7 @@ namespace TF;
 
 use Illuminate\Support\Facades\File;
 use TF\Contracts\RestLoggerInterface;
+use Carbon\Carbon;
 
 class FileLogger extends AbstractLogger implements RestLoggerInterface
 {
@@ -34,6 +35,15 @@ class FileLogger extends AbstractLogger implements RestLoggerInterface
 
             foreach ($files as $file) {
                 if (!is_dir($file)) {
+                    $filename = pathinfo($file, PATHINFO_FILENAME);
+                    $arr = explode('rest-', $filename);
+                    $file_date = $arr[1];
+                    $file_date = Carbon::parse($file_date);
+
+                    //check log file not older than 15 days
+                    if($file_date->diffInDays() > 15){
+                        continue;
+                    }
                     $lines = file($this->path . DIRECTORY_SEPARATOR . $file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
                     foreach ($lines as $line) {
